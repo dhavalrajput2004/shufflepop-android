@@ -1,0 +1,49 @@
+plugins { id 'com.android.application' }
+def apiBase = providers.gradleProperty('multiplayerApiBase').getOrElse('')
+if (apiBase) {
+    def apiUri = new URI(apiBase)
+    if (apiUri.scheme != 'https' || !apiUri.host || apiUri.rawUserInfo || apiUri.rawQuery || apiUri.rawFragment || apiUri.rawPath) {
+        throw new GradleException('multiplayerApiBase must be an HTTPS origin without path or trailing slash.')
+    }
+}
+def signingFile = rootProject.file('keystore.properties')
+def uploadProperties = new Properties()
+if (signingFile.exists()) { signingFile.withInputStream { uploadProperties.load(it) } }
+android {
+    buildFeatures { buildConfig true }
+    namespace 'com.dhavalrajput.shufflepop'
+    compileSdk 36
+    buildToolsVersion '36.0.0'
+    defaultConfig {
+        applicationId 'com.dhavalrajput.shufflepop'
+        minSdk 26
+        targetSdk 36
+        versionCode 6
+        versionName '1.3.0-dev'
+        buildConfigField 'String', 'MULTIPLAYER_API_BASE', groovy.json.JsonOutput.toJson(apiBase)
+    }
+    signingConfigs {
+        release {
+            if (signingFile.exists()) {
+                storeFile rootProject.file(uploadProperties['storeFile'])
+                storePassword uploadProperties['storePassword']
+                keyAlias uploadProperties['keyAlias']
+                keyPassword uploadProperties['keyPassword']
+            }
+        }
+    }
+    buildTypes {
+        release {
+            if (signingFile.exists()) signingConfig signingConfigs.release
+            minifyEnabled false
+        }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+tasks.configureEach { task ->
+    if (task.name in ['bundleRelease', 'assembleRelease']) {
+        task.doFirst {
+            if (!signingFile.exists()) throw new GradleException('Missing keystore.properties. See README.md to configure your upload key.')
+        }
+    }
+}

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#6d4aff">
+  <title>ShufflePop</title>
+  <style>
+    [hidden]{display:none!important}
+    :root{--ink:#242033;--cream:#fff8e9;--purple:#6d4aff;--coral:#ff5e66;--yellow:#ffc93d;--mint:#42cf9b;--blue:#3385ff}
+    *{box-sizing:border-box}html,body{min-height:100%}body{margin:0;background:radial-gradient(circle at 15% 3%,#fff6c7 0 12%,transparent 30%),linear-gradient(155deg,#fffaf0,#f8ebff);color:var(--ink);font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}button,select{font:inherit}button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:disabled{cursor:default;opacity:.45}button:focus-visible,select:focus-visible{outline:3px solid #19162a;outline-offset:3px}
+    header{max-width:980px;margin:auto;padding:18px 18px 8px;display:flex;justify-content:space-between;align-items:center}.logo{font-size:26px;font-weight:1000;letter-spacing:-1.5px}.logo i{font-style:normal;color:var(--coral)}.iconbtn{border:0;background:#fff;border-radius:16px;padding:11px 15px;color:var(--ink);box-shadow:0 5px 0 #dfd2ef;font-weight:850}
+    main{max-width:920px;margin:auto;padding:0 14px 22px}.intro{display:flex;align-items:end;justify-content:space-between;margin:6px 4px 14px}.eyebrow{font-size:10px;letter-spacing:1.9px;color:var(--purple);font-weight:950}.intro h1{font-size:27px;line-height:1.05;letter-spacing:-1.2px;margin:5px 0 0}.pill{background:#fff;border:2px solid #eadff5;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:800}
+    .stage{position:relative;perspective:850px;min-height:clamp(300px,47vh,355px);display:grid;place-items:center}.table{position:relative;width:min(100%,760px);height:clamp(285px,45vh,340px);padding:18px 22px 12px;background:radial-gradient(ellipse at 50% 40%,#6337a0,#351752 75%);clip-path:polygon(14% 0,86% 0,100% 100%,0 100%);border-radius:24px 24px 50px 50px;filter:drop-shadow(0 19px 0 #281039) drop-shadow(0 29px 18px #4c315c55);display:flex;flex-direction:column;align-items:center;overflow:hidden;transform:rotateX(2deg);transform-origin:bottom}.table:after{content:"";position:absolute;inset:9px 12px 10px;border:2px solid #ffffff28;clip-path:inherit;border-radius:inherit;pointer-events:none}.table.wood{background:repeating-linear-gradient(87deg,#824723 0 28px,#8f5029 29px 55px,#74401f 56px 83px);filter:drop-shadow(0 19px 0 #462111) drop-shadow(0 29px 18px #4c315c55)}.table.wood:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent,#fff1 45%,transparent 60%)}.table.mat{background:radial-gradient(ellipse at 50% 40%,#6337a0,#351752 75%)}.table.grass{background:radial-gradient(ellipse at 45% 20%,#45a66c,#17613f 65%,#0e3f2b);filter:drop-shadow(0 19px 0 #0a3422) drop-shadow(0 29px 18px #4c315c55)}
+    .opponents{display:flex;justify-content:center;width:76%;gap:4px;z-index:1}.player{text-align:center;min-width:0;flex:1;padding:5px 3px;border:2px solid transparent;border-radius:15px;color:#fff}.player.active{border-color:var(--yellow);background:#0003;box-shadow:0 0 18px #ffc93d66}.avatar{width:36px;height:36px;border-radius:50%;background:#ffffff24;display:grid;place-items:center;margin:0 auto 3px;font-size:18px}.player strong{font-size:11px}.backs{font-size:10px;color:#fffbd8}.center{display:flex;align-items:center;gap:22px;margin:23px 0 10px;z-index:1}.pile{text-align:center;color:white}.pile small{display:block;margin-top:7px;font-size:8px;text-transform:uppercase;letter-spacing:1.3px}.direction{text-align:center;color:#fff;font-weight:900}.direction div:first-child{font-size:22px}.direction div:last-child{font-size:9px;margin-top:2px}
+    .card{width:67px;height:98px;border:4px solid #fffaf0;border-radius:13px;position:relative;color:#fff;background:var(--c);box-shadow:0 8px 12px #1e102e66;flex-shrink:0;transition:transform .18s,filter .18s;font-size:27px;font-weight:1000;padding:0}.card:before{content:"";position:absolute;inset:20px 8px;border:2px solid #ffffffaa;border-radius:17px;transform:rotate(10deg)}.card span{position:relative;text-shadow:0 2px 2px #0003}.card em{position:absolute;left:5px;top:2px;font-size:11px;font-style:normal}.card .mark{position:absolute;right:5px;bottom:3px;font-size:11px}.card.back{background:linear-gradient(145deg,var(--purple),#3e2292);transform:rotate(-7deg)}.card.back:after{content:"";position:absolute;inset:12px;border:2px dashed #ffcf43;border-radius:10px}.card.back span{font-size:18px;color:#fff}.status{z-index:1;background:#160b2788;border:1px solid #ffffff24;border-radius:999px;padding:7px 13px;font-size:11px;min-height:32px;color:#fff;text-align:center;max-width:85%}
+    .handtop{display:flex;justify-content:space-between;align-items:center;margin:20px 4px 5px}.handtop strong{font-size:17px}.muted{font-size:10px;color:#766d83}.hand{display:flex;gap:7px;overflow-x:auto;padding:13px 5px 20px;min-height:134px;overscroll-behavior-x:contain}.hand .card.playable{box-shadow:0 0 0 3px var(--yellow),0 9px 13px #4d326655}.hand .card.playable:active{transform:translateY(-12px) rotate(-2deg)}.hand .card.unplayable{filter:saturate(.4) brightness(.78)}.card.unplayable:disabled{opacity:1}.actions{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:8px}.primary,.call,.quiet{border:0;border-radius:15px;padding:13px 11px;font-weight:950;min-height:46px}.primary{background:var(--yellow);color:#31240a;box-shadow:0 5px 0 #dca51e}.call{background:var(--coral);color:#fff;box-shadow:0 5px 0 #c93f48}.quiet{background:#fff;color:var(--ink);box-shadow:0 5px 0 #dfd2ef}.tip{text-align:center;font-size:10px;color:#7a7085;margin:13px 0 0}.foot{margin:19px 4px 0;display:flex;justify-content:center;gap:20px}.foot button{border:0;background:none;color:#6c6078;font-size:11px;font-weight:750}
+    .homeScreen{position:fixed;inset:0;z-index:5;overflow:auto;padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 12% 12%,#ffe45e 0 4%,transparent 4.5%),radial-gradient(circle at 88% 17%,#ff7d83 0 5%,transparent 5.5%),radial-gradient(circle at 85% 88%,#53d9a7 0 6%,transparent 6.5%),linear-gradient(155deg,#fffaf0,#f0ddff)}.homeScreen[hidden]{display:none}.homeInner{width:min(100%,430px);text-align:center}.homeLogo{font-size:30px;font-weight:1000;letter-spacing:-1.5px}.homeLogo i{font-style:normal;color:var(--coral)}.homeScreen h1{font-size:39px;line-height:.96;letter-spacing:-2px;margin:13px 0 20px}.homeScreen h1 span{display:block;color:var(--coral)}.homeActions{display:grid;gap:10px;margin:0 auto;max-width:350px}.homeActions button{width:100%}.onlineNote{font-size:11px;color:#74667e;margin:16px 0 0}.homeLinks{display:flex;justify-content:center;gap:20px;margin-top:15px}.homeLinks button{border:0;background:none;color:#5d4e69;font-size:11px;font-weight:850}.modal{position:fixed;inset:0;background:#241535ba;backdrop-filter:blur(8px);z-index:10;display:grid;place-items:center;padding:18px;overflow:auto}.modal[hidden]{display:none}.dialog{width:min(100%,430px);max-height:92vh;overflow:auto;padding:25px;background:var(--cream);border:3px solid #fff;border-radius:27px;box-shadow:0 16px 0 #24153555}.dialog h2{margin:4px 0 7px;font-size:28px;line-height:1.05;letter-spacing:-1px}.dialog p{color:#685f73;margin:8px 0 17px}.dialog .primary,.dialog .quiet{width:100%;margin-top:9px}.heroCards{height:210px;position:relative;margin:8px auto 10px;width:300px}.heroCards .card{position:absolute;width:118px;height:172px;top:20px;transition:transform .25s;border-width:6px;border-radius:19px}.heroCards .card:nth-child(1){left:10px;transform:rotate(-15deg)}.heroCards .card:nth-child(2){left:91px;transform:translateY(-12px)}.heroCards .card:nth-child(3){left:172px;transform:rotate(15deg)}.heroCards .card.popped:nth-child(1){transform:translate(-13px,-8px) rotate(-23deg)}.heroCards .card.popped:nth-child(2){transform:translateY(-29px) rotate(2deg)}.heroCards .card.popped:nth-child(3){transform:translate(13px,-8px) rotate(23deg)}.heroCards .card span{font-size:41px}.colors{display:flex;gap:9px}.colors button{height:64px;flex:1;border:4px solid #fff;border-radius:16px;color:#fff;font-weight:1000}.toast{font-size:12px;background:#f0e6f7;border-radius:12px;padding:10px 12px}.danger{color:#b52939!important}.row{display:flex;gap:8px}
+    @media(min-width:700px){.table{height:380px}.stage{min-height:405px}.card{width:75px;height:108px}.center{margin-top:31px}.intro h1{font-size:32px}}
+    @media(max-width:380px){.table{height:326px;padding-inline:10px}.stage{min-height:338px}.opponents{width:88%}.center{gap:14px}.card{width:62px;height:92px}.actions{grid-template-columns:1.35fr 1fr}.actions .call{grid-column:1/-1}.intro h1{font-size:24px}.dialog{padding:20px}.heroCards{transform:scale(.86);margin-top:-7px;margin-bottom:-7px}.homeScreen h1{font-size:34px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+    .actions{display:flex;justify-content:center;min-height:51px}
+    .actions button{flex:1;max-width:220px}
+    .homeActions button,.homeLinks button{transition:transform .14s,box-shadow .14s,filter .14s}
+    .homeActions button:active{transform:translateY(5px) scale(.97);box-shadow:0 0 0 transparent;filter:brightness(1.08)}
+    .homeLinks button:active{transform:scale(.92);color:var(--coral)}
+    .homeActions button:hover{filter:brightness(1.04)}
+    .homeActions button:focus-visible{outline:3px solid var(--purple);outline-offset:5px}
+    @media(prefers-reduced-motion:reduce){.homeActions button,.homeLinks button{transition:none}}
+    .handtop{margin-top:8px}.hand{padding-bottom:12px;min-height:126px}
+    .reactions{display:flex;justify-content:center;gap:7px;margin:8px 0 12px}
+    .reactionButton{border:2px solid #ded0ef;border-radius:15px;background:#fff9f1;box-shadow:0 3px 0 #ded0ef;min-width:44px;min-height:44px;font-size:24px;padding:3px;transition:transform .15s}
+    .reactionButton:active{transform:translateY(3px) scale(.93);box-shadow:none}
+    .player{position:relative}.reactionBubble{display:inline-grid;place-items:center;font-size:26px;min-width:40px;height:40px;background:#fff9ef;border:2px solid #e5d2ff;border-radius:18px;box-shadow:0 4px 8px #28103933;animation:reactionPop .2s ease-out}
+    .player .reactionBubble{position:absolute;right:-3px;top:-4px;z-index:3}
+    .selfReaction{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:3;display:flex;align-items:center;gap:6px;color:#fff;font-size:11px;font-weight:900}
+    @keyframes reactionPop{from{opacity:0;scale:.6}to{opacity:1;scale:1}}
+    @media(prefers-reduced-motion:reduce){.reactionBubble{animation:none}.reactionButton{transition:none}}
+  </style>
+</head>
+<body>
+  <section class="homeScreen" id="homeScreen">
+    <div class="homeInner">
+      <div class="homeLogo">Shuffle<i>Pop!</i></div>
+      <div class="heroCards" id="heroCards" aria-label="Tap the cards to pop them">
+        <button class="card" style="--c:#f04f5f" aria-label="Pop red card"><span>7</span></button>
+        <button class="card" style="--c:#e9ad20;color:#30220b" aria-label="Pop yellow card"><span>★</span></button>
+        <button class="card" style="--c:#347fe8" aria-label="Pop blue card"><span>⇄</span></button>
+      </div>
+      <h1>Play cards.<span>Keep friends.</span></h1>
+      <div class="homeActions"><button class="primary" id="homePlay">Play solo →</button><button class="quiet" id="homeOnline">Online rooms · Coming next</button></div>
+      <p class="onlineNote" id="homeStats">Offline practice · No ads</p>
+      <div class="homeLinks"><button id="homeRules">How to play</button><button id="homePrivacy">Privacy</button></div>
+    </div>
+  </section>
+  <header><div class="logo">Shuffle<i>Pop!</i></div><span class="pill">Solo · Easy</span></header>
+  <main>
+    <div class="intro"><div class="eyebrow">PLAY CARDS. KEEP FRIENDS.</div></div>
+    <div class="stage"><section class="table mat" id="table" aria-label="Game table">
+      <div class="opponents" id="players"></div>
+      <div class="center"><div class="pile"><button class="card back" id="deck" aria-label="Draw a card"><span>SP</span></button><small>Draw</small></div><div class="direction"><div id="direction">↻</div><div id="color">RED</div></div><div class="pile"><div id="discard"></div><small>Discard</small></div></div>
+      <div class="status" id="status" aria-live="polite">Ready to shuffle?</div>
+      <div class="selfReaction" id="selfReaction" hidden aria-live="polite"></div>
+    </section></div>
+    <div class="handtop"><strong id="handTitle">Your hand</strong><span class="muted">Swipe cards · tap to play</span></div><div class="hand" id="hand"></div>
+    <div class="reactions" id="reactions" role="group" aria-label="Send a reaction">
+      <button class="reactionButton" data-reaction="😂" aria-label="Laugh">😂</button>
+      <button class="reactionButton" data-reaction="😎" aria-label="Cool">😎</button>
+      <button class="reactionButton" data-reaction="😭" aria-label="Cry">😭</button>
+      <button class="reactionButton" data-reaction="😡" aria-label="Angry">😡</button>
+      <button class="reactionButton" data-reaction="👏" aria-label="Applause">👏</button>
+      <button class="reactionButton" data-reaction="🔥" aria-label="Fire">🔥</button>
+    </div>
+    <div class="actions"><button class="primary" id="draw">＋ Draw</button><button class="quiet" id="pass" disabled>End turn</button><button class="call" id="call">Call ONE!</button></div>
+    <div class="actions" id="onlineFinish" hidden></div>
+    <p class="tip">Same number? Tap more cards, then End turn.</p>
+    <div class="foot"><button id="privacy">Privacy</button><button id="rules">How to play ⓘ</button><button id="onlineRoomMenu" hidden>Room options</button></div>
+  </main>
+  <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="Game menu"><div class="dialog" id="dialog"></div></div>
+  <section class="homeScreen" id="onlineScreen" hidden aria-label="Online room"><div class="homeInner"><button class="quiet" id="onlineBack">← Back</button><div id="onlineBody" class="dialog" style="text-align:left;margin-top:18px"></div></div></section>
+  <style>
+    #onlineScreen{z-index:6;align-items:flex-start;background:linear-gradient(155deg,#fffaf0,#f0ddff)}
+    #onlineBody{width:100%;max-height:none}.onlineLabel{display:block;margin:13px 0 5px;font-size:12px;font-weight:850;color:#685082}
+    #onlineBody input,#onlineBody select{width:100%;min-height:47px;border:2px solid #cdb9e0;background:#fff;border-radius:13px;padding:10px;color:#34264c;font:inherit}
+    #onlineBody input:focus-visible,#onlineBody select:focus-visible{outline:3px solid #6d4aff;outline-offset:2px}
+    #roomCode{text-transform:uppercase;letter-spacing:5px}.roomCodeDisplay{letter-spacing:5px;color:#6d4aff;background:#fff2bc;padding:14px;text-align:center;border-radius:15px}
+    .onlineHost{padding:8px 0 17px;border-bottom:2px dashed #dbc8e2;margin-bottom:14px}.onlineSeats{display:grid;gap:9px;margin:18px 0}
+    .onlineSeat{display:flex;gap:13px;align-items:center;background:#fff;border:2px solid #ddccec;border-radius:16px;padding:12px}.onlineSeat>span{font-size:28px}.onlineSeat small{display:block;color:#786584;font-size:12px}
+    #onlineMessage{font-size:13px;color:#684d84;min-height:20px}
+  </style>
+  <script src="api-config.js"></script><script src="engine.js"></script><script src="app.js"></script><script src="online.js"></script>
+</body>
+</html>
