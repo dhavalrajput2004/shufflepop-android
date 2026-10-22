@@ -5,7 +5,7 @@ function randomFor(seed){let n=seed>>>0;return()=>{n=(Math.imul(n,1664525)+10139
 class BoardError extends Error{constructor(code){super(code);this.code=code;}}
 class Leaderboard{
  constructor(file){this.file=file;this.data={players:[]};if(file&&fs.existsSync(file))this.data=JSON.parse(fs.readFileSync(file,'utf8'));}
- persist(){if(!this.file)return;fs.mkdirSync(path.dirname(this.file),{recursive:true});const tmp=this.file+'.tmp';const fd=fs.openSync(tmp,'w',0o600);try{fs.writeFileSync(fd,JSON.stringify(this.data));fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(tmp,this.file);const dir=fs.openSync(path.dirname(this.file),'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}}
+ persist(){if(!this.file)return;fs.mkdirSync(path.dirname(this.file),{recursive:true});const tmp=this.file+'.tmp';const fd=fs.openSync(tmp,'w',0o600);try{fs.writeFileSync(fd,JSON.stringify(this.data));fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(tmp,this.file);if(process.platform!=='win32'){const dir=fs.openSync(path.dirname(this.file),'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}}}
  transaction(fn){const before=JSON.stringify(this.data);try{const result=fn();this.persist();return result;}catch(e){this.data=JSON.parse(before);throw e;}}
  hash(token){return crypto.createHash('sha256').update(token||'').digest('hex');}
  player(token){const p=this.data.players.find(p=>p.auth===this.hash(token));if(!p)throw new BoardError('INVALID_SESSION');return p;}
