@@ -61,10 +61,10 @@ function createApi({rooms=new Rooms(),now=Date.now,allowedOrigins=[APP_ORIGIN],l
           if(!['/v1/solo/leaderboard','/v1/solo/profile','/v1/solo/start','/v1/solo/finish'].includes(path))return send(404,{error:'NOT_FOUND'});
           try{const response=await fetch(soloUpstream+path,{method:req.method,headers:{'Content-Type':'application/json',...(req.headers.authorization?{Authorization:req.headers.authorization}:{})},body:req.method==='POST'?JSON.stringify(body):undefined,redirect:'error',signal:AbortSignal.timeout(12000)});const data=await response.json();return send(response.status,data);}catch(_){return send(503,{error:'LEADERBOARD_UNAVAILABLE'});}
         }
-        if(boardRead)result=leaderboard.board(/^Bearer ([A-Za-z0-9_-]{43})$/.exec(req.headers.authorization||'')?.[1]);
-        else if(req.method==='POST'&&path==='/v1/solo/profile')result=leaderboard.register(body.name);
-        else if(req.method==='POST'&&path==='/v1/solo/start')result=leaderboard.start(token);
-        else if(req.method==='POST'&&path==='/v1/solo/finish')result=leaderboard.finish(token,body);
+        if(boardRead)result=await leaderboard.board(/^Bearer ([A-Za-z0-9_-]{43})$/.exec(req.headers.authorization||'')?.[1]);
+        else if(req.method==='POST'&&path==='/v1/solo/profile')result=await leaderboard.register(body.name);
+        else if(req.method==='POST'&&path==='/v1/solo/start')result=await leaderboard.start(token);
+        else if(req.method==='POST'&&path==='/v1/solo/finish')result=await leaderboard.finish(token,body);
         if(!result)return send(404,{error:'NOT_FOUND'});return send(200,result);
       }
       if(req.method==='GET'&&path==='/v1/rooms/view')result=rooms.view(token);
@@ -93,6 +93,7 @@ function createApi({rooms=new Rooms(),now=Date.now,allowedOrigins=[APP_ORIGIN],l
   return server;
 }
 if(require.main===module){
-  const server=createApi({leaderboard:process.env.LEADERBOARD_FILE?new Leaderboard(process.env.LEADERBOARD_FILE):null,soloUpstream:process.env.SOLO_LEADERBOARD_UPSTREAM||null});server.listen(Number(process.env.PORT||8080),process.env.HOST||'127.0.0.1',()=>console.log('ShufflePop room API started. Use HTTPS hosting for phones.'));
+  const board=process.env.DATABASE_URL?require('./postgres-leaderboard.js').fromEnvironment():process.env.LEADERBOARD_FILE?new Leaderboard(process.env.LEADERBOARD_FILE):null;
+  const server=createApi({leaderboard:board,soloUpstream:process.env.DATABASE_URL?null:process.env.SOLO_LEADERBOARD_UPSTREAM||null});server.on('close',()=>board?.close?.());server.listen(Number(process.env.PORT||8080),process.env.HOST||'127.0.0.1',()=>console.log('ShufflePop room API started. Use HTTPS hosting for phones.'));
 }
 module.exports={createApi};
