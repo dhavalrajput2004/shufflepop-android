@@ -1,4 +1,68 @@
+# ShufflePop! 1.7.9 — Solo start and leaderboard recovery
+
+See [1.7.9 notes](docs/UPDATE_1_7_9.md). The global solo leaderboard runs on Render with Neon storage; no PC tunnel is required.
+
+# ShufflePop! 1.7.7 — New solo game and global wins leaderboard
+
+See [1.7.7 notes](docs/UPDATE_1_7_7.md), including the pending backend activation.
+
+# ShufflePop! 1.7.6 — Bold landscape cards and simpler settings
+
+See [1.7.6 notes](docs/UPDATE_1_7_6.md).
+
+# ShufflePop! 1.7.5 — larger cards and a hand that stays open
+
+See [1.7.5 notes](docs/UPDATE_1_7_5.md). Portrait fits 3–4 cards; landscape has larger cards and a wider message.
+
+# ShufflePop! 1.7.4 — wider portrait hand, stable End turn spacing
+
+See [1.7.4 notes](docs/UPDATE_1_7_4.md). Portrait shows 4–5 cards; landscape cards are larger.
+
+# ShufflePop! 1.7.3 — open hand replaces Your cards control
+
+See [1.7.3 notes](docs/UPDATE_1_7_3.md). The message stays visible and the central piles stay fixed.
+
+# ShufflePop! 1.7.2 — stable table when revealing your hand
+
+See [1.7.2 notes](docs/UPDATE_1_7_2.md). Tap Your cards to replace the instruction with your hand. Draw and Discard stay in place.
+
+# ShufflePop! 1.7.1 — three approved table themes
+
+Based on 1.6.7, with its original card controls and layout. See [theme update notes](docs/UPDATE_1_7_1.md).
+
+# ShufflePop1.6.7 — centered landscape YOUR CARDS
+
+The hand control is centered at the bottom; the message remains above the hand. Portrait is unchanged. See [update notes](docs/UPDATE_1_6_7.md).
+
+# ShufflePop1.6.6 — landscape message above your cards
+
+Current landscape instructions appear above the hand. Portrait is unchanged. See [update notes](docs/UPDATE_1_6_6.md).
+
+# ShufflePop1.6.5 — Android landscape window correction
+
+Landscape gameplay now uses the full native window, a six-pixel table gutter, and larger1.6.1card proportions on normal landscape screens. Portrait presentation is unchanged. See [update notes](docs/UPDATE_1_6_5.md).
+
+# ShufflePop1.6.4 — landscape table footer
+
+Landscape places the current message and End turn/ONE controls in a bottom row inside the table, with the hand controls above. Portrait retains1.6.3 spacing. See [update notes](docs/UPDATE_1_6_4.md).
+
+# ShufflePop 1.6.3 — 1.6.1 spacing refinement
+
+Landscape table extends to the safe bottom edge. Portrait keeps small margins and larger central card piles, while preserving the original 1.6.1 opponent positions. See [update notes](docs/UPDATE_1_6_3.md).
+
+# ShufflePop 1.6.1 — portrait and adaptive gameplay
+
+See [responsive update notes](docs/UPDATE_1_6_1.md) for orientation behavior and device checks.
+
 # ShufflePop Android
+
+## Current development: 1.6.0 game-feel preview
+
+Flat landscape table, four-side seats, folding private hand, table-deck drawing, and one current colored message. Tutorial and optional game effects remain. Invite-only room-code multiplayer connects to the existing HTTPS test server. Card flights, distinctive action feedback, ONE badges, expressive reactions, shorter waiting and winner spotlights enrich the round. See [update notes](docs/UPDATE_1_6.md) and [quality notes](docs/QUALITY.md).
+
+The debug package is `com.dhavalrajput.shufflepop.landscape`, installed alongside earlier Preview apps. This is a development build, not a Play release. Rooms remain in memory; two-phone verification is required.
+
+The following sections describe earlier offline releases.
 
 ## Version 1.2.0
 

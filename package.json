@@ -1,6 +1,6 @@
 {
   "name": "shufflepop-room-server",
-  "version": "1.7.8",
+  "version": "1.7.9",
   "private": true,
   "engines": {
     "node": ">=22 <23"

@@ -18,8 +18,8 @@ android {
         applicationId 'com.dhavalrajput.shufflepop'
         minSdk 26
         targetSdk 36
-        versionCode 6
-        versionName '1.3.0-dev'
+        versionCode 28
+        versionName '1.7.9'
         buildConfigField 'String', 'MULTIPLAYER_API_BASE', groovy.json.JsonOutput.toJson(apiBase)
     }
     signingConfigs {
@@ -33,6 +33,10 @@ android {
         }
     }
     buildTypes {
+        debug {
+            applicationIdSuffix '.landscape'
+            versionNameSuffix '-test'
+        }
         release {
             if (signingFile.exists()) signingConfig signingConfigs.release
             minifyEnabled false
