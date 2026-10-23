@@ -18,8 +18,8 @@ android {
         applicationId 'com.dhavalrajput.shufflepop'
         minSdk 26
         targetSdk 36
-        versionCode 28
-        versionName '1.7.9'
+        versionCode 29
+        versionName '1.7.10'
         buildConfigField 'String', 'MULTIPLAYER_API_BASE', groovy.json.JsonOutput.toJson(apiBase)
     }
     signingConfigs {

@@ -54,8 +54,8 @@ manifest.write_text(xml)
 run([tool('aapt2'), 'compile', '--dir', res, '-o', out / 'resources.zip'])
 unsigned = out / 'unsigned.apk'
 run([tool('aapt2'), 'link', '-o', unsigned, '-I', android_jar, '--manifest', manifest,
-     '--min-sdk-version', '26', '--target-sdk-version', '36', '--version-code', '28',
-     '--version-name', '1.7.9-test', '-A', project / 'app/src/main/assets', out / 'resources.zip'])
+     '--min-sdk-version', '26', '--target-sdk-version', '36', '--version-code', '29',
+     '--version-name', '1.7.10-test', '-A', project / 'app/src/main/assets', out / 'resources.zip'])
 config = out / 'BuildConfig.java'
 config.write_text('package com.dhavalrajput.shufflepop; public final class BuildConfig { public static final String MULTIPLAYER_API_BASE = ' + json.dumps(args.api) + '; public static final boolean DEBUG = true; }')
 classes, dex = out / 'classes', out / 'dex'
@@ -76,7 +76,7 @@ if not key.exists():
          '-storepass', 'android', '-keypass', 'android', '-alias', 'androiddebugkey',
          '-keyalg', 'RSA', '-keysize', '2048', '-validity', '10000',
          '-dname', 'CN=Android Debug,O=Android,C=US'])
-apk = out / 'ShufflePop_1.7.9_Landscape.apk'
+apk = out / 'ShufflePop_1.7.10_Landscape.apk'
 run([tool('apksigner'), 'sign', '--ks', key, '--ks-pass', 'pass:android',
      '--key-pass', 'pass:android', '--out', apk, out / 'aligned.apk'])
 run([tool('apksigner'), 'verify', '--verbose', apk])

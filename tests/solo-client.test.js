@@ -20,3 +20,8 @@ test('failed ranked connection starts local solo directly and keeps a valid prof
 test('ranked start uses server seed and refresh exposes verified global wins',async()=>{
  const c=client({token:'valid',enabled:true},async url=>response(url.endsWith('/start')?{id:'round',seed:42}:{players:[],me:{name:'Player',wins:7,rank:1}}));await c.board.startRanked();assert.equal(c.starts.length,1);assert.equal(c.starts[0].s.rankId,'round');await c.board.refreshProfile();assert.equal(c.board.globalWins,7);assert.equal(c.shown.length,0);
 });
+
+test('joined profiles automatically score future games and standings have no mode toggle',async()=>{
+ const c=client({token:'valid',enabled:false},async()=>response({players:[{id:'me',name:'Player',wins:1,rank:1}],me:{id:'me',name:'Player',wins:1,rank:1}}));
+ assert.equal(c.board.enabled,true);await c.board.board();const html=c.get('boardBody').html;assert.match(html,/Player/);assert.match(html,/1 wins/);assert.doesNotMatch(html,/boardToggle|Use offline solo|Rank future solo games/);
+});

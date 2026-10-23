@@ -1,6 +1,6 @@
-# ShufflePop! 1.7.9 — Solo start and leaderboard recovery
+# ShufflePop! 1.7.10 — Simple global leaderboard
 
-See [1.7.9 notes](docs/UPDATE_1_7_9.md). The global solo leaderboard runs on Render with Neon storage; no PC tunnel is required.
+See [1.7.10 notes](docs/UPDATE_1_7_10.md). The global solo leaderboard runs on Render with Neon storage; no PC tunnel is required.
 
 # ShufflePop! 1.7.7 — New solo game and global wins leaderboard
 
