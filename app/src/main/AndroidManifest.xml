@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:roundIcon="@drawable/ic_launcher" android:theme="@style/AppTheme" android:allowBackup="false" android:supportsRtl="true" android:usesCleartextTraffic="false" android:enableOnBackInvokedCallback="true">
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-5496630814582780~4324904067" />
         <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|smallestScreenSize|keyboardHidden|uiMode">
             <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
         </activity>

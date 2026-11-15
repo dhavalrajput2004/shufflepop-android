@@ -6,6 +6,15 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback;
+import android.webkit.JavascriptInterface;
 import android.view.WindowInsets;
 import android.webkit.CookieManager;
 import android.webkit.WebResourceRequest;
@@ -26,6 +35,17 @@ import org.json.JSONObject;
 /** Bundled UI; network requests are restricted to the configured HTTPS room API. */
 public final class MainActivity extends Activity {
     private WebView webView;
+    private static final String APP_OPEN_AD_UNIT_ID = BuildConfig.DEBUG
+        ? "ca-app-pub-3940256099942544/9257395921"
+        : "ca-app-pub-5496630814582780/1536012634";
+    private static final long APP_OPEN_AD_MAX_AGE_MS = 4L * 60L * 60L * 1000L;
+    private AppOpenAd appOpenAd;
+    private long appOpenAdLoadTime;
+    private boolean isLoadingAppOpenAd;
+    private boolean isShowingAppOpenAd;
+    private boolean hasStartedOnce;
+    private boolean wasInBackground;
+    private volatile boolean canShowAppOpenAd;
     private static final String HOST = "appassets.androidplatform.net";
     private static final String ENTRY = "https://" + HOST + "/assets/index.html";
     private static final Map<String, String> ASSETS = new HashMap<>();
@@ -38,6 +58,7 @@ public final class MainActivity extends Activity {
     }
     @Override public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
+        initializeMobileAds();
         createGameView();
         if (Build.VERSION.SDK_INT >= 33) {
             getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
@@ -47,6 +68,7 @@ public final class MainActivity extends Activity {
     @SuppressWarnings("SetJavaScriptEnabled")
     private void createGameView() {
         webView = new WebView(this);
+        webView.addJavascriptInterface(new AdPlacementBridge(), "ShufflePopAds");
         webView.setBackgroundColor(Color.rgb(16, 19, 30));
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -105,6 +127,83 @@ public final class MainActivity extends Activity {
         webView.requestApplyInsets();
         webView.loadUrl(ENTRY);
     }
+    private final class AdPlacementBridge {
+        @JavascriptInterface
+        public void setCanShowAppOpenAd(boolean allowed) {
+            canShowAppOpenAd = allowed;
+        }
+    }
+
+    private void initializeMobileAds() {
+        new Thread(() -> MobileAds.initialize(getApplicationContext(),
+            status -> runOnUiThread(this::loadAppOpenAd))).start();
+    }
+
+    private void loadAppOpenAd() {
+        if (isLoadingAppOpenAd || isAppOpenAdAvailable()) return;
+        isLoadingAppOpenAd = true;
+        AppOpenAd.load(this, APP_OPEN_AD_UNIT_ID, new AdRequest.Builder().build(),
+            new AppOpenAdLoadCallback() {
+                @Override public void onAdLoaded(AppOpenAd ad) {
+                    appOpenAd = ad;
+                    appOpenAdLoadTime = System.currentTimeMillis();
+                    isLoadingAppOpenAd = false;
+                    Log.d("ShufflePopAds", "App open ad loaded");
+                }
+                @Override public void onAdFailedToLoad(LoadAdError error) {
+                    isLoadingAppOpenAd = false;
+                    Log.w("ShufflePopAds", "App open ad failed to load: " + error.getMessage());
+                }
+            });
+    }
+
+    private boolean isAppOpenAdAvailable() {
+        return appOpenAd != null &&
+            System.currentTimeMillis() - appOpenAdLoadTime < APP_OPEN_AD_MAX_AGE_MS;
+    }
+
+    private void showAppOpenAdIfAvailable() {
+        if (isShowingAppOpenAd || !canShowAppOpenAd) return;
+        if (!isAppOpenAdAvailable()) {
+            appOpenAd = null;
+            loadAppOpenAd();
+            return;
+        }
+        isShowingAppOpenAd = true;
+        appOpenAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override public void onAdDismissedFullScreenContent() {
+                isShowingAppOpenAd = false;
+                appOpenAd = null;
+                loadAppOpenAd();
+            }
+            @Override public void onAdFailedToShowFullScreenContent(AdError error) {
+                Log.w("ShufflePopAds", "App open ad failed to show: " + error.getMessage());
+                isShowingAppOpenAd = false;
+                appOpenAd = null;
+                loadAppOpenAd();
+            }
+        });
+        appOpenAd.show(this);
+    }
+
+    @Override protected void onStart() {
+        super.onStart();
+        if (!hasStartedOnce) {
+            hasStartedOnce = true; // Never show an ad on the first launch.
+            return;
+        }
+        if (wasInBackground) {
+            wasInBackground = false;
+            if (canShowAppOpenAd) showAppOpenAdIfAvailable();
+            else loadAppOpenAd();
+        }
+    }
+
+    @Override protected void onStop() {
+        if (!isShowingAppOpenAd) wasInBackground = true;
+        super.onStop();
+    }
+
     private void handleBack() {
         webView.evaluateJavascript("window.Pocket ? window.Pocket.back() : false", handled -> {
             if (!"true".equals(handled)) {
