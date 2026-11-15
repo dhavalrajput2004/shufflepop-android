@@ -1,3 +1,7 @@
+# ShufflePop! 1.7.11 — AdMob app open ads
+
+See [1.7.11 notes](docs/UPDATE_1_7_11.md). Google Mobile Ads SDK is initialized at startup; app open ads are shown only when returning to the home screen, never on the first launch or during gameplay.
+
 # ShufflePop! 1.7.10 — Simple global leaderboard
 
 See [1.7.10 notes](docs/UPDATE_1_7_10.md). The global solo leaderboard runs on Render with Neon storage; no PC tunnel is required.
@@ -88,7 +92,7 @@ Colorful, offline-first card-game prototype published by **Dhaval Rajput**.
 - Wild color choice, skip, reverse, draw two, draw four, and ONE call
 - Saved game and win count stored only on the device
 - First-person angled Mat table
-- No account, ads, analytics, network permission, or data collection
+- Google AdMob app open ads on eligible returns to the home screen; no analytics SDK or in-app purchases
 
 Online private rooms are deliberately reserved for Phase 2. In that flow, the host will choose the shared Wood, Mat, or Grass table.
 
