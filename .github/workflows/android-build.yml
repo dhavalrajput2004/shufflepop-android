@@ -1,0 +1,37 @@
+name: Android build verification
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, "ci/android-build-verify-1.7.11"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Install Android SDK 36
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Run unit tests and build debug APK
+        run: bash ./gradlew --no-daemon testDebugUnitTest assembleDebug
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShufflePop-1.7.11-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
