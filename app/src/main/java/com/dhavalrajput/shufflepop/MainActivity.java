@@ -35,7 +35,9 @@ import org.json.JSONObject;
 /** Bundled UI; network requests are restricted to the configured HTTPS room API. */
 public final class MainActivity extends Activity {
     private WebView webView;
-    private static final String APP_OPEN_AD_UNIT_ID = "ca-app-pub-5496630814582780/1536012634";
+    private static final String APP_OPEN_AD_UNIT_ID = BuildConfig.DEBUG
+        ? "ca-app-pub-3940256099942544/9257395921"
+        : "ca-app-pub-5496630814582780/1536012634";
     private static final long APP_OPEN_AD_MAX_AGE_MS = 4L * 60L * 60L * 1000L;
     private AppOpenAd appOpenAd;
     private long appOpenAdLoadTime;
