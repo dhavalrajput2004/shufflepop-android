@@ -200,8 +200,10 @@ function resumeGame() {
   if (!game) { home(); return; }
   if (game.over) result(); else scheduleBot();
 }
+function syncAdPlacement() { if (window.ShufflePopAds) window.ShufflePopAds.setCanShowAppOpenAd(!$('homeScreen').hidden); }
 function showGameScreen() {
   $('homeScreen').hidden = true;
+  syncAdPlacement();
   document.querySelector('header').hidden = false;
   document.querySelector('main').hidden = false;
 }
@@ -213,6 +215,7 @@ function home() {
   if(window.GameFeel)GameFeel.reset('solo');
   setHandOpen(false);stopBot(); save(); pending = null; modalKind = ''; $('modal').hidden = true;
   document.querySelector('header').hidden = true; document.querySelector('main').hidden = true; $('homeScreen').hidden = false;
+  syncAdPlacement();
   $('homeScreen').removeAttribute('aria-hidden');
   $('homePlay').textContent = 'Continue solo game →';
   $('homePlay').hidden = !game||game.over;
